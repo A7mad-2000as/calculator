@@ -8,11 +8,21 @@ lowerDisplay.textContent = currentExpression.firstOperand;
 const buttons = document.querySelectorAll("button");
 buttons.forEach(button => button.addEventListener("click", handleButton));
 
+window.addEventListener("keydown", handleKeyboardInput);
+
 function Expression() {
     this.firstOperand = "0";
     this.operator = "";
     this.secondOperand = "";
     this.result = "";
+}
+
+function handleKeyboardInput(e) {
+    const button = document.querySelector(`button[data-key="${e.keyCode}"]`);
+    if (button === null) {
+        return;
+    }
+    button.dispatchEvent(new Event("click"));
 }
 
 function handleButton(e) {
@@ -55,7 +65,7 @@ function handleDigitButton(e) {
 
 function handleOperatorButton(e) {
     if (currentExpression.operator !== "" && currentExpression.secondOperand === "") {
-        return;
+        currentExpression.operator = e.target.textContent;
     }
 
     else if (currentExpression.operator === "") {
