@@ -1,7 +1,7 @@
 let firstOperand = "0";
 let operator = "";
 let secondOperand= "";
-let result = "0";
+let result = "";
 
 const upperDisplay = document.querySelector(".upper-display");
 const lowerDisplay = document.querySelector(".lower-display");
