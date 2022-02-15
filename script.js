@@ -1,20 +1,23 @@
-let currentExpression = new Expression();
+let firstOperand = "0";
+let operator = "";
+let secondOperand= "";
+let result = "0";
 
 const upperDisplay = document.querySelector(".upper-display");
 const lowerDisplay = document.querySelector(".lower-display");
 
-lowerDisplay.textContent = currentExpression.firstOperand;
+lowerDisplay.textContent = firstOperand;
 
 const buttons = document.querySelectorAll("button");
 buttons.forEach(button => button.addEventListener("click", handleButton));
 
 window.addEventListener("keydown", handleKeyboardInput);
 
-function Expression() {
-    this.firstOperand = "0";
-    this.operator = "";
-    this.secondOperand = "";
-    this.result = "";
+function clear() {
+    firstOperand = "0";
+    operator = "";
+    secondOperand = "";
+    result = "";
 }
 
 function handleKeyboardInput(e) {
@@ -48,82 +51,82 @@ function handleButton(e) {
 }
 
 function handleDigitButton(e) {
-    if (currentExpression.operator !== "") {
-        currentExpression.secondOperand += e.target.textContent;
+    if (operator !== "") {
+        secondOperand += e.target.textContent;
     }
 
-    else if (currentExpression.firstOperand === "0") {
-        currentExpression.firstOperand = e.target.textContent;
+    else if (firstOperand === "0") {
+        firstOperand = e.target.textContent;
     }
 
     else {
-        currentExpression.firstOperand += e.target.textContent;
+        firstOperand += e.target.textContent;
     }
 
     updateDisplays();
 }
 
 function handleOperatorButton(e) {
-    if (currentExpression.operator !== "" && currentExpression.secondOperand === "") {
-        currentExpression.operator = e.target.textContent;
+    if (operator !== "" && secondOperand === "") {
+        operator = e.target.textContent;
     }
 
-    else if (currentExpression.operator === "") {
-        currentExpression.operator = e.target.textContent;
+    else if (operator === "") {
+        operator = e.target.textContent;
     }
 
     else  {
-        currentExpression.firstOperand = (+operate(currentExpression.operator, +currentExpression.firstOperand, +currentExpression.secondOperand).toFixed(6)).toString();
-        if (currentExpression.firstOperand === "Infinity" || currentExpression.firstOperand === "-Infinity") {
+        firstOperand = (+operate(operator, +firstOperand, +secondOperand).toFixed(6)).toString();
+        if (firstOperand === "Infinity" || firstOperand === "-Infinity") {
             alert("Math Error: You can't divide by zero");
             handleClearButton();
             return;
         }
-        currentExpression.operator = e.target.textContent;
-        currentExpression.secondOperand = "";
+        operator = e.target.textContent;
+        secondOperand = "";
     }
 
     updateDisplays();
 }
 
 function handleEqualsButton(e) {
-    if (currentExpression.secondOperand === "") {
+    if (secondOperand === "") {
         return;
     }
     else {
-        currentExpression.result = (+operate(currentExpression.operator, +currentExpression.firstOperand, +currentExpression.secondOperand).toFixed(6)).toString();
-        if (currentExpression.result === "Infinity" || currentExpression.result === "-Infinity") {
+        result = (+operate(operator, +firstOperand, +secondOperand).toFixed(6)).toString();
+        if (result === "Infinity" || result === "-Infinity") {
             alert("Math Error: You can't divide by zero");
             handleClearButton();
             return;
         }
         updateDisplays();
-        currentExpression.firstOperand = currentExpression.result;
-        currentExpression.operator = "";
-        currentExpression.secondOperand = "";
-        currentExpression.result = "";
+        firstOperand = result;
+        operator = "";
+        secondOperand = "";
+        result = "";
     }
 }
 
 function handleDotButton(e) {
-    if (currentExpression.operator === "" && currentExpression.firstOperand.includes(".") || currentExpression.operator !== "" && currentExpression.secondOperand.includes(".")) {
+    if (operator === "" && firstOperand.includes(".") || operator !== "" && secondOperand.includes(".")) {
         return;
     }
 
-    else if (currentExpression.operator === "" && currentExpression.firstOperand === "") {
-        currentExpression.firstOperand += "0.";
+    else if (operator === "" && firstOperand === "") {
+        firstOperand += "0.";
     }
 
-    else if (currentExpression.operator == "") {
-        currentExpression.firstOperand += ".";
+    else if (operator == "") {
+        firstOperand += ".";
     }
 
-    else if (currentExpression.secondOperand === "") {
-        currentExpression.secondOperand += "0.";
+    else if (secondOperand === "") {
+        secondOperand += "0.";
     }
 
     else {
-        currentExpression.secondOperand += ".";
+        secondOperand += ".";
     }
 
     updateDisplays();
@@ -140,42 +143,42 @@ function handleControlButton(e) {
 }
 
 function handleClearButton(e) {
-    currentExpression = new Expression();
+    clear();
     updateDisplays();
 
 }
 
 function handleDeleteButton(e) {
-    if (currentExpression.secondOperand != "") {
-        currentExpression.secondOperand = currentExpression.secondOperand.slice(0, -1);
+    if (secondOperand != "") {
+        secondOperand = secondOperand.slice(0, -1);
     }
 
-    else if (currentExpression.firstOperand != "" && currentExpression.operator === "") {
-        currentExpression.firstOperand = currentExpression.firstOperand.slice(0, -1);
+    else if (firstOperand != "" && operator === "") {
+        firstOperand = firstOperand.slice(0, -1);
     }
 
     lowerDisplay.textContent = lowerDisplay.textContent.slice(0, -1);
 }
 
 function updateDisplays() {
-    if (currentExpression.result !== "") {
-        upperDisplay.textContent = `${currentExpression.firstOperand} ${currentExpression.operator} ${currentExpression.secondOperand} = `;
-        lowerDisplay.textContent = currentExpression.result;
+    if (result !== "") {
+        upperDisplay.textContent = `${firstOperand} ${operator} ${secondOperand} = `;
+        lowerDisplay.textContent = result;
     }
 
-    else if (currentExpression.operator === "") {
+    else if (operator === "") {
         upperDisplay.textContent = "";
-        lowerDisplay.textContent = currentExpression.firstOperand;
+        lowerDisplay.textContent = firstOperand;
     }
 
-    else if (currentExpression.secondOperand === "") {
-        upperDisplay.textContent = `${currentExpression.firstOperand} ${currentExpression.operator}`;
-        lowerDisplay.textContent = currentExpression.firstOperand;
+    else if (secondOperand === "") {
+        upperDisplay.textContent = `${firstOperand} ${operator}`;
+        lowerDisplay.textContent = firstOperand;
     }
 
     else {
-        upperDisplay.textContent = `${currentExpression.firstOperand} ${currentExpression.operator}`;
-        lowerDisplay.textContent = currentExpression.secondOperand;
+        upperDisplay.textContent = `${firstOperand} ${operator}`;
+        lowerDisplay.textContent = secondOperand;
     }
 }
 
